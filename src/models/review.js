@@ -58,23 +58,43 @@ const putReview = (data) => {
 }
 
 const getReview = (filter) => {
- return new Promise((resolve, reject) => {
-  pool.query(
-   `SELECT rv.*
-        FROM tbl_ulasan AS rv
-            WHERE rv.nama ILIKE '%${filter.search}%'
-            ORDER BY rv.${filter.sortby} ${filter.sortorder}
-            LIMIT ${filter.limit}
-            OFFSET ${filter.offset}`,
-   (err, result) => {
-    if (!err) {
-     resolve(result)
-    } else {
-     reject(new Error(err))
+ console.log(filter)
+ if (filter.search !== '') {
+  return new Promise((resolve, reject) => {
+   pool.query(
+    `SELECT rv.*
+          FROM tbl_ulasan AS rv
+          WHERE rv.nama LIKE '%${filter.search}%'
+          ORDER BY rv.${filter.sortby} ${filter.sortorder}
+          LIMIT ${filter.limit}
+          OFFSET ${filter.offset}`,
+    (err, result) => {
+     if (!err) {
+      resolve(result)
+     } else {
+      reject(new Error(err))
+     }
     }
-   }
-  )
- })
+   )
+  })
+ } else {
+  return new Promise((resolve, reject) => {
+   pool.query(
+    `SELECT rv.*
+          FROM tbl_ulasan AS rv
+          ORDER BY rv.${filter.sortby} ${filter.sortorder}
+          LIMIT ${filter.limit}
+          OFFSET ${filter.offset}`,
+    (err, result) => {
+     if (!err) {
+      resolve(result)
+     } else {
+      reject(new Error(err))
+     }
+    }
+   )
+  })
+ }
 }
 
 const getReviewByID = (filter) => {
@@ -82,7 +102,7 @@ const getReviewByID = (filter) => {
   pool.query(
    `SELECT rv.*
         FROM tbl_ulasan AS rv
-            WHER rv.id = '${filter.id}'`,
+            WHERE rv.id = '${filter.id}'`,
    (err, result) => {
     if (!err) {
      resolve(result)

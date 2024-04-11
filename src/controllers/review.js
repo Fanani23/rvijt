@@ -61,7 +61,7 @@ const reviewController = {
  },
  get: async (req, res) => {
   const page = parseInt(req.query.page) || 1
-  const limit = parseInt(req.query.limit) || 10
+  const limit = parseInt(req.query.limit) || 50
   const sortby = req.query.sortby || 'create_time'
   const sortorder = req.query.sortorder || 'desc'
   const search = req.query.search || ''
@@ -78,7 +78,7 @@ const reviewController = {
   try {
    const result = await getReview(filter)
    if (result) {
-    response(res, 200, true, result.rows, 'Get review success')
+    response(res, 200, true, result, 'Get review success')
    }
   } catch (err) {
    console.error(new Error(err))
@@ -95,7 +95,7 @@ const reviewController = {
   try {
    const result = await getReviewByID(filter)
    if (result) {
-    response(res, 200, true, result.rows[0], 'Get review by ID success')
+    response(res, 200, true, result, 'Get review by ID success')
    }
   } catch (err) {
    console.error(new Error(err))
